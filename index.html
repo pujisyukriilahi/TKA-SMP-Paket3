@@ -205,7 +205,18 @@
                 if (idx === currentIdx) btn.classList.add('nav-current');
                 
                 const ans = userAnswers[idx];
-                const isAnswered = ans !== null && (!Array.isArray(ans) || ans.length > 0) && (!ans.includes(null));
+                
+                // FIXED: Cek apakah soal sudah dijawab dengan benar (menghindari error .includes pada tipe non-array)
+                let isAnswered = false;
+                if (ans !== null) {
+                    if (Array.isArray(ans)) {
+                        // Untuk Checkbox (length > 0) atau TF (tidak mengandung null)
+                        isAnswered = ans.length > 0 && !ans.includes(null);
+                    } else {
+                        // Untuk MCQ (langsung true jika tidak null)
+                        isAnswered = true;
+                    }
+                }
                 
                 if (isAnswered) {
                     btn.classList.remove('nav-unanswered');
@@ -233,7 +244,7 @@
                     const isSelected = userAnswers[currentIdx].includes(i);
                     const div = document.createElement('div');
                     div.className = `option-card p-4 rounded-xl flex items-center gap-3 ${isSelected ? 'selected shadow-sm' : ''}`;
-                    div.innerHTML = `<div class="w-6 h-6 border-2 rounded flex items-center justify-center">${isSelected ? '✓' : ''}</div> <span>${opt}</span>`;
+                    div.innerHTML = `<div class="w-6 h-6 border-2 rounded flex items-center justify-center text-blue-600">${isSelected ? '✓' : ''}</div> <span>${opt}</span>`;
                     div.onclick = () => {
                         const idx = userAnswers[currentIdx].indexOf(i);
                         if (idx > -1) userAnswers[currentIdx].splice(idx, 1);
@@ -252,8 +263,8 @@
                     row.innerHTML = `
                         <p class="text-sm font-medium flex-1">${opt}</p>
                         <div class="flex gap-2">
-                            <button onclick="setTF(${i}, true)" class="flex-1 md:flex-none px-4 py-1.5 rounded-lg font-bold text-xs ${userAnswers[currentIdx][i] === true ? 'bg-emerald-600 text-white' : 'bg-white border text-slate-400'}">BENAR</button>
-                            <button onclick="setTF(${i}, false)" class="flex-1 md:flex-none px-4 py-1.5 rounded-lg font-bold text-xs ${userAnswers[currentIdx][i] === false ? 'bg-rose-600 text-white' : 'bg-white border text-slate-400'}">SALAH</button>
+                            <button onclick="setTF(${i}, true)" class="flex-1 md:flex-none px-4 py-1.5 rounded-lg font-bold text-xs ${userAnswers[currentIdx][i] === true ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white border text-slate-400'}">BENAR</button>
+                            <button onclick="setTF(${i}, false)" class="flex-1 md:flex-none px-4 py-1.5 rounded-lg font-bold text-xs ${userAnswers[currentIdx][i] === false ? 'bg-rose-600 text-white border-rose-600' : 'bg-white border text-slate-400'}">SALAH</button>
                         </div>
                     `;
                     table.appendChild(row);
