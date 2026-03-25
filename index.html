@@ -200,8 +200,21 @@
             document.querySelectorAll('.nav-btn').forEach((btn, idx) => {
                 btn.classList.remove('nav-current');
                 if (idx === currentIdx) btn.classList.add('nav-current');
+                
                 const ans = userAnswers[idx];
-                const isAnswered = ans !== null && (!Array.isArray(ans) || ans.length > 0) && (!ans.includes(null));
+                
+                // FIXED: Menambahkan pengecekan tipe data sebelum memanggil .includes()
+                let isAnswered = false;
+                if (ans !== null) {
+                    if (Array.isArray(ans)) {
+                        // Untuk tipe checkbox dan true/false
+                        isAnswered = ans.length > 0 && !ans.includes(null);
+                    } else {
+                        // Untuk tipe pilihan ganda (mcq)
+                        isAnswered = true;
+                    }
+                }
+
                 if (isAnswered) { btn.classList.replace('nav-unanswered', 'nav-answered'); } 
                 else { btn.classList.replace('nav-answered', 'nav-unanswered'); }
             });
@@ -212,7 +225,7 @@
             if (q.type === 'mcq') {
                 q.options.forEach((opt, i) => {
                     const div = document.createElement('div');
-                    div.className = `option-card p-4 rounded-xl flex items-center gap-3 ${userAnswers[currentIdx] === i ? 'selected' : ''}`;
+                    div.className = `option-card p-4 rounded-xl flex items-center gap-3 ${userAnswers[currentIdx] === i ? 'selected shadow-sm' : ''}`;
                     div.innerHTML = `<span class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-xs">${String.fromCharCode(65 + i)}</span> <span>${opt}</span>`;
                     div.onclick = () => { userAnswers[currentIdx] = i; loadQuestion(); };
                     container.appendChild(div);
@@ -222,7 +235,7 @@
                 q.options.forEach((opt, i) => {
                     const isSelected = userAnswers[currentIdx].includes(i);
                     const div = document.createElement('div');
-                    div.className = `option-card p-4 rounded-xl flex items-center gap-3 ${isSelected ? 'selected' : ''}`;
+                    div.className = `option-card p-4 rounded-xl flex items-center gap-3 ${isSelected ? 'selected shadow-sm' : ''}`;
                     div.innerHTML = `<div class="w-6 h-6 border-2 rounded flex items-center justify-center text-blue-600">${isSelected ? '✓' : ''}</div> <span>${opt}</span>`;
                     div.onclick = () => {
                         const idx = userAnswers[currentIdx].indexOf(i);
@@ -260,7 +273,11 @@
             let incomplete = [];
             questions.forEach((q, idx) => {
                 const ans = userAnswers[idx];
-                let isComplete = (q.type === 'mcq' && ans !== null) || (q.type === 'checkbox' && ans && ans.length > 0) || (q.type === 'tf' && ans && !ans.includes(null));
+                let isComplete = false;
+                if (q.type === 'mcq') isComplete = ans !== null;
+                else if (q.type === 'checkbox') isComplete = ans && ans.length > 0;
+                else if (q.type === 'tf') isComplete = ans && !ans.includes(null);
+                
                 if (!isComplete) incomplete.push(idx + 1);
             });
             if (incomplete.length > 0) {
