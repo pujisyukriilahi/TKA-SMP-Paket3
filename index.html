@@ -5,378 +5,507 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tryout TKA Matematika SMP 2026 - Paket 3</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MathJax untuk merender persamaan LaTeX -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         .option-card { cursor: pointer; transition: all 0.2s; border: 2px solid #e5e7eb; position: relative; }
         .option-card:hover { border-color: #3b82f6; background-color: #f0f7ff; }
         .selected { border-color: #2563eb; background-color: #dbeafe; font-weight: bold; }
-        .nav-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
+        .nav-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; border: 2px solid transparent; }
         .nav-unanswered { background-color: #f3f4f6; color: #9ca3af; border-color: #e5e7eb; }
         .nav-answered { background-color: #2563eb; color: white; }
         .nav-current { border-color: #1e3a8a; box-shadow: 0 0 0 2px #bfdbfe; }
-        .modal-overlay { background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
-        .res-box { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: white; }
-        .res-correct { background-color: #10b981; }
-        .res-wrong { background-color: #ef4444; }
-        img.stimulus-img { max-width: 100%; height: auto; margin: 15px auto; display: block; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        
         .fade-in { animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .res-box { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 0.8rem; font-weight: bold; color: white; }
+        .res-correct { background-color: #10b981; }
+        .res-wrong { background-color: #ef4444; }
+        img.stimulus-img { max-width: 100%; height: auto; margin: 15px auto; display: block; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; background: white; }
+        .mjx-chtml { font-size: 110% !important; }
     </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 min-h-screen font-medium">
 
-    <!-- HALAMAN INTRO -->
+    <!-- 1. HALAMAN INTRO -->
     <div id="intro-screen" class="min-h-screen flex items-center justify-center p-4">
         <div class="max-w-2xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 fade-in">
             <div class="bg-blue-600 p-8 text-center text-white">
-                <div class="bg-white/20 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                </div>
-                <h1 class="text-3xl font-black mb-2 uppercase tracking-tight">Tryout TKA Matematika SMP</h1>
-                <p class="text-blue-100 font-bold opacity-90">Simulasi Tes Kompetensi Akademik - Paket 3</p>
+                <h1 class="text-3xl font-black mb-2 uppercase tracking-tight">Tryout TKA Matematika</h1>
+                <p class="text-blue-100 font-bold opacity-90">Paket 3 - Simulasi Ujian Nasional 2026</p>
             </div>
             <div class="p-8">
-                <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center">
+                <div class="grid grid-cols-2 gap-4 mb-8 text-center">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
                         <p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Jumlah Soal</p>
-                        <p class="text-2xl font-black text-slate-800">30 Butir</p>
+                        <p class="text-2xl font-black text-slate-800">30 Soal</p>
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center">
-                        <p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Waktu Pengerjaan</p>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <p class="text-[10px] uppercase font-bold text-slate-400 mb-1">Waktu</p>
                         <p class="text-2xl font-black text-slate-800">75 Menit</p>
                     </div>
                 </div>
 
-                <div class="space-y-4 mb-8">
-                    <h3 class="font-bold text-slate-900 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-                        </svg>
+                <div class="mb-8 space-y-4 text-sm leading-relaxed">
+                    <h3 class="font-bold text-slate-900 border-b pb-2 flex items-center gap-2 uppercase tracking-wider">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
                         Instruksi Pengerjaan:
                     </h3>
-                    <ul class="text-sm text-slate-600 space-y-2 list-disc pl-5 font-medium leading-relaxed">
-                        <li>Pastikan koneksi internet stabil selama mengerjakan soal.</li>
-                        <li>Gunakan navigasi di sisi kanan untuk berpindah antar nomor.</li>
-                        <li>Sistem penilaian menggunakan aturan jawaban benar/salah yang sudah diperbarui.</li>
-                        <li>Jawaban akan terkirim otomatis jika waktu habis.</li>
-                        <li>Jangan merefresh halaman agar progres jawaban tidak hilang.</li>
+                    <ul class="text-slate-600 space-y-2 list-disc pl-5 font-medium">
+                        <li>Lengkapi data diri (Nama & Asal Sekolah) sebelum memulai tes.</li>
+                        <li>Pastikan koneksi internet stabil agar konten gambar dan rumus matematika termuat sempurna.</li>
+                        <li>Gunakan panel navigasi di sisi kanan untuk berpindah antar soal.</li>
+                        <li>Terdapat beberapa tipe soal: Pilihan Ganda, Pilihan Ganda Kompleks (Checkbox), dan Benar/Salah (T/F).</li>
+                        <li>Tekan tombol "Kirim Jawaban" hanya jika Anda sudah yakin dengan seluruh jawaban Anda.</li>
                     </ul>
                 </div>
 
-                <button onclick="startTest()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all transform active:scale-95 flex items-center justify-center gap-3">
-                    MULAI KERJAKAN SEKARANG
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
+                <div class="space-y-4 mb-8">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nama Lengkap Murid</label>
+                        <input type="text" id="input-name" placeholder="Masukkan nama..." class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-600 outline-none font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Asal Sekolah</label>
+                        <input type="text" id="input-school" placeholder="Contoh: SMPN 3 Surabaya" class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:border-blue-600 outline-none font-bold">
+                    </div>
+                </div>
+
+                <button onclick="startTest()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-blue-700 shadow-xl transition-all transform active:scale-95">
+                    MULAI UJIAN SEKARANG
                 </button>
-            </div>
-            <div class="bg-slate-50 p-4 text-center border-t border-slate-100">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Koding Paket 3 - TKA 2026</p>
             </div>
         </div>
     </div>
 
-    <!-- AREA UJIAN UTAMA -->
+    <!-- 2. AREA UJIAN -->
     <div id="main-test-area" class="hidden max-w-6xl mx-auto py-6 px-4 flex flex-col lg:flex-row gap-6 fade-in">
-        
-        <!-- Kolom Utama: Soal -->
         <div class="flex-1">
             <div class="flex justify-between items-center mb-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                 <div>
-                    <h1 class="text-xl font-bold text-slate-900">Tryout TKA Matematika SMP</h1>
-                    <p class="text-sm text-slate-500 font-medium">Paket 3 • 30 Soal • 75 Menit</p>
+                    <h1 class="text-xl font-bold text-slate-900 leading-tight tracking-tight">Paket 3: Matematika SMP</h1>
+                    <p id="user-display" class="text-xs text-blue-600 font-bold mt-1 uppercase tracking-wider"></p>
                 </div>
-                <div class="flex items-center gap-3 bg-red-50 px-4 py-2 rounded-xl border border-red-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <div id="timer" class="text-2xl font-mono font-black text-red-600 tracking-tighter">75:00</div>
-                </div>
+                <div class="bg-red-50 px-4 py-2 rounded-xl text-red-600 font-black text-2xl font-mono border border-red-100 shadow-sm" id="timer">75:00</div>
             </div>
 
             <div id="quiz-card" class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
-                <div id="stimulus-container" class="bg-slate-50 p-6 border-b border-slate-100">
+                <div class="bg-slate-50 p-6 border-b border-slate-100" id="stimulus-content-box">
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Stimulus Soal</span>
+                        <span class="bg-indigo-100 text-indigo-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest">Stimulus Soal</span>
                     </div>
-                    <div id="stimulus-content" class="text-slate-700 leading-relaxed italic text-sm md:text-base"></div>
+                    <div id="stimulus-text" class="text-slate-700 leading-relaxed italic text-sm md:text-base font-medium"></div>
                 </div>
-
                 <div class="p-6">
                     <div class="flex items-start gap-4 mb-6">
-                        <span id="question-number" class="bg-slate-800 text-white font-bold px-4 py-2 rounded-xl text-lg shadow-md">1</span>
-                        <h2 id="question-text" class="text-lg md:text-xl font-semibold text-slate-800 pt-1 leading-snug"></h2>
+                        <span id="q-num" class="bg-slate-800 text-white font-bold px-4 py-2 rounded-xl shadow-md">1</span>
+                        <h2 id="question-text" class="text-lg font-bold pt-1 leading-snug text-slate-800"></h2>
                     </div>
-
                     <div id="options-container" class="space-y-3"></div>
                 </div>
-
-                <div class="p-6 bg-slate-50 flex justify-between items-center border-t border-slate-100">
-                    <button id="prev-btn" onclick="changeQuestion(-1)" class="flex items-center gap-2 px-5 py-2.5 font-bold text-slate-600 hover:text-blue-600 disabled:opacity-30 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                        Sebelumnya
-                    </button>
-                    <button id="next-btn" onclick="changeQuestion(1)" class="flex items-center gap-2 bg-blue-600 text-white px-8 py-2.5 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">
-                        Selanjutnya
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                    </button>
+                <div class="p-6 bg-slate-50 flex justify-between border-t border-slate-100 text-sm font-bold uppercase tracking-widest">
+                    <button id="prev-btn" onclick="changeQuestion(-1)" class="text-slate-400 hover:text-blue-600 transition-colors">Sebelumnya</button>
+                    <button id="next-btn" onclick="changeQuestion(1)" class="bg-blue-600 text-white px-8 py-2.5 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-100 transition-all">Selanjutnya</button>
                 </div>
             </div>
         </div>
 
-        <!-- Kolom Navigator -->
         <div class="lg:w-80">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 sticky top-6">
-                <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2 uppercase text-xs tracking-wider">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-                    Navigasi Soal
-                </h3>
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 sticky top-6 text-center">
+                <h3 class="font-bold text-slate-900 mb-4 text-[10px] uppercase tracking-[0.2em] opacity-50">Navigasi Soal</h3>
                 <div id="nav-grid" class="grid grid-cols-5 gap-2 mb-6"></div>
-                <div class="space-y-2 mb-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-t pt-4">
-                    <div class="flex items-center gap-2">
-                        <div class="w-3 h-3 rounded bg-blue-600 shadow-sm"></div>
-                        <span>Sudah Dijawab</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-3 h-3 rounded bg-slate-100 border border-slate-200"></div>
-                        <span>Belum Dijawab</span>
-                    </div>
+                <div class="space-y-2 mb-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-left border-t pt-4 border-slate-100">
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-blue-600"></div><span>Terisi</span></div>
+                    <div class="flex items-center gap-2"><div class="w-3 h-3 rounded bg-slate-100 border border-slate-200"></div><span>Kosong</span></div>
                 </div>
-                <button id="final-submit-btn" onclick="checkBeforeSubmit()" class="w-full bg-emerald-600 text-white py-4 rounded-xl font-black text-lg hover:bg-emerald-700 shadow-xl shadow-emerald-100 transition-all transform active:scale-95">
-                    KIRIM JAWABAN
-                </button>
+                <button onclick="confirmFinish()" class="w-full bg-emerald-600 text-white py-4 rounded-xl font-black shadow-lg hover:bg-emerald-700 transition-all uppercase text-sm tracking-widest">KIRIM JAWABAN</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Warning -->
-    <div id="modal-warning" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center border border-slate-100">
-            <div class="bg-amber-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+    <!-- 3. HALAMAN HASIL -->
+    <div id="result-screen" class="hidden min-h-screen bg-slate-50 flex items-center justify-center p-6 py-12 text-center text-slate-800">
+        <div class="max-w-2xl w-full bg-white rounded-[40px] shadow-2xl p-10 border border-slate-200 fade-in">
+            <h2 class="text-3xl font-black text-slate-900 uppercase italic tracking-tighter">Tryout Selesai!</h2>
+            <div class="my-6 py-8 border-y border-slate-100">
+                <p class="text-slate-400 text-xs font-bold uppercase mb-1 tracking-widest">Skor Akhir Kamu</p>
+                <div id="final-score" class="text-8xl font-black text-blue-600 leading-none">0</div>
+                <p class="mt-4 font-bold text-slate-600 text-sm tracking-wider uppercase italic">Benar <span id="correct-count">0</span> dari 30 Soal</p>
             </div>
-            <h3 class="text-xl font-bold text-slate-900 mb-2">Belum Lengkap!</h3>
-            <p id="warning-text" class="text-slate-600 mb-6 text-sm"></p>
-            <button onclick="closeModal()" class="w-full bg-slate-800 text-white py-3 rounded-xl font-bold hover:bg-black transition-all">Kembali</button>
+
+            <div class="mb-10 text-left">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 border-b border-slate-100 pb-2 text-center">Ringkasan Hasil Per Nomor</h3>
+                <div id="eval-grid" class="flex flex-wrap gap-2 justify-center"></div>
+            </div>
+            
+            <button onclick="location.reload()" class="w-full bg-slate-900 text-white py-5 rounded-3xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg">ULANGI LATIHAN</button>
         </div>
     </div>
 
-    <!-- Halaman Hasil -->
-    <div id="result-screen" class="hidden min-h-screen bg-slate-50 flex items-center justify-center p-6 py-12">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full p-8 md:p-12 border border-slate-200">
-            <div class="text-center">
-                <h2 class="text-3xl font-black text-slate-900 mb-2 uppercase italic tracking-tight">Tryout Paket 3 Selesai!</h2>
-                <div class="flex flex-col md:flex-row items-center justify-center gap-8 my-8 border-y border-slate-100 py-8">
-                    <div class="text-center">
-                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">Skor Akhir</p>
-                        <div id="final-score" class="text-8xl font-black text-blue-600 leading-none">0</div>
-                    </div>
-                    <div class="h-16 w-px bg-slate-100 hidden md:block"></div>
-                    <div class="text-left space-y-2">
-                        <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-emerald-500"></span><span class="text-slate-600 font-medium">Jawaban Benar: <b id="correct-count" class="text-slate-900">0</b></span></div>
-                        <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-slate-300"></span><span class="text-slate-600 font-medium">Total Soal: <b class="text-slate-900">30</b></span></div>
-                        <p id="score-message" class="text-sm text-slate-500 italic pt-2"></p>
-                    </div>
-                </div>
-                <div class="text-left mb-10">
-                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Ringkasan Hasil Per Nomor</h3>
-                    <div id="result-breakdown" class="flex flex-wrap gap-2 justify-center md:justify-start"></div>
-                </div>
-                <button onclick="location.reload()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-black transition-all transform active:scale-95 shadow-lg shadow-slate-200">ULANGI LATIHAN</button>
+    <!-- MODAL KONFIRMASI -->
+    <div id="confirm-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm text-center">
+        <div class="bg-white rounded-3xl p-10 max-w-sm w-full shadow-2xl border border-slate-100">
+            <div class="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-amber-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            </div>
+            <h3 class="text-2xl font-black text-slate-900 mb-4 uppercase tracking-tighter">Kirim Jawaban?</h3>
+            <p class="text-slate-500 text-sm mb-8 leading-relaxed font-medium">Pastikan semua soal Paket 3 sudah terjawab dengan teliti sebelum melihat hasil evaluasi akhir.</p>
+            <div class="flex gap-3 font-bold uppercase text-[10px] tracking-widest">
+                <button onclick="closeModal()" class="flex-1 py-4 text-slate-400 bg-slate-100 rounded-2xl transition-colors">Batal</button>
+                <button onclick="finishQuiz()" class="flex-1 py-4 font-black text-white bg-blue-600 rounded-2xl shadow-lg transition-colors">Ya, Selesai</button>
             </div>
         </div>
     </div>
 
     <script>
         const questions = [
-            { type: "mcq", stimulus: "Sebuah supermarket memberikan kupon diskon 'Potongan Langsung Rp25.000,00' untuk minimal belanja Rp200.000,00. PPN 11% dikenakan setelah diskon. Rina belanja Rp225.000,00.", question: "Berapa total uang yang harus dibayar Rina di kasir?", options: ["Rp200.000,00", "Rp222.000,00", "Rp224.500,00", "Rp249.750,00"], answer: 1 },
-            { type: "checkbox", stimulus: "X = (14² - 4²), Y = (15 x 12), Z = 2² x 3² x 5", question: "Manakah pernyataan yang benar mengenai hubungan ketiga bilangan tersebut? (Pilih semua yang sesuai)", options: ["Bilangan X dan Y memiliki nilai yang sama besar.", "Ketiga bilangan tersebut habis dibagi oleh 60.", "FPB dari X, Y, dan Z adalah 20.", "Bilangan Z memiliki nilai yang sama dengan Y."], answer: [0, 1, 3] },
-            { type: "tf", stimulus: "Skala pada peta Provinsi Jawa Barat menunjukkan 1 : 500.000. Jarak antara kota A dan kota B pada peta adalah 12 cm. Pak Budi mengendarai mobil kecepatan rata-rata 60 km/jam.", question: "Tentukan Benar atau Salah pernyataan berikut!", options: ["Jarak sebenarnya antara kota A dan kota B adalah 60 km.", "Waktu yang dibutuhkan Pak Budi untuk sampai ke tujuan adalah tepat 1 jam.", "Jika skala peta diubah menjadi 1 : 250.000, maka jarak di peta menjadi 24 cm."], answer: [true, true, true] },
-            { type: "mcq", stimulus: "Untuk mendapatkan warna cat 'Ungu Lavender', perbandingan Biru dan Merah adalah 4 : 3. Dibutuhkan 14 liter campuran.", question: "Berapa liter cat Merah yang harus ia siapkan?", options: ["6 liter", "8 liter", "10 liter", "12 liter"], answer: 0 },
-            { type: "checkbox", stimulus: "Untuk menjamu 50 tamu undangan, dibutuhkan 12,5 kg beras. Hari ini ada pesanan untuk 180 orang.", question: "Manakah pernyataan estimasi yang benar? (Pilih semua yang benar)", options: ["Kebutuhan beras total adalah 45 kg.", "Rata-rata setiap tamu mengonsumsi 0,25 kg beras.", "Koki tersebut cukup membeli 4 karung beras ukuran 10 kg.", "Jika jumlah tamu berkurang menjadi 100 orang, kebutuhan beras menjadi 25 kg."], answer: [0, 1, 3] },
-            { type: "mcq", stimulus: "Persediaan pakan untuk 1.200 ekor ayam cukup selama 20 hari. Jika ditambah 300 ekor ayam lagi.", question: "Berapa hari pakan tersebut akan habis?", options: ["15 hari", "16 hari", "18 hari", "25 hari"], answer: 1 },
-            { type: "tf", stimulus: "Pembangunan Gedung Olahraga. <img src='TKA_SMP_3.7.png' class='stimulus-img'> Proyek direncanakan selesai dalam 60 hari oleh 24 pekerja. Setelah 15 hari berjalan, proyek terhenti selama 9 hari.", question: "Tentukan Benar atau Salah pernyataan berikut!", options: ["Sisa waktu efektif setelah libur cuaca adalah 36 hari.", "Hutang pekerjaan akibat libur adalah 216 unit kerja.", "Manajer harus menambah 6 pekerja agar proyek selesai tepat waktu."], answer: [true, true, true] },
-            // Perbaikan No.8: Pernyataan 1, 2, dan 3 Benar (Indeks 0, 1, 2)
-            { type: "checkbox", stimulus: "Paket A: Biaya tetap Rp50.000,00. Paket B: Gratis, iklan 30 detik tiap 3 lagu. Andi dengar 300 lagu/bulan. Waktu Andi bernilai Rp10.000,00/jam.", question: "Manakah pernyataan yang logis mengenai pemilihan paket tersebut? (Pilih semua yang benar)", options: ["Total waktu yang dihabiskan Andi menonton iklan di Paket B adalah 50 menit.", "Nilai waktu yang hilang akibat iklan di Paket B setara dengan Rp8.333,00.", "Paket B secara finansial lebih menguntungkan karena total biaya di bawah Rp50.000,00.", "Jika Andi mendengarkan 600 lagu, Paket A menjadi lebih menguntungkan."], answer: [0, 1, 2] },
-            { type: "mcq", stimulus: "Halim (09.00) -> Padalarang (30m) -> Berhenti (10m) -> Tegalluar (15m).", question: "Pada pukul berapakah kereta tersebut diperkirakan sampai di Stasiun Tegalluar?", options: ["09.45", "09.55", "10.05", "10.15"], answer: 1 },
-            { type: "checkbox", stimulus: "Berdasarkan alur kereta cepat, terdapat kendala sinyal yang memaksa kereta mengurangi kecepatan menjadi setengahnya selama 10 menit waktu normal Halim-Padalarang.", question: "Manakah dampak yang mungkin terjadi pada jadwal kereta?", options: ["Kereta akan terlambat sampai di Padalarang selama tepat 10 menit.", "Total waktu perjalanan menjadi lebih dari 1 jam.", "Kereta akan sampai di Tegalluar pukul 10.05.", "Kecepatan rata-rata seluruh perjalanan akan menurun."], answer: [0, 1, 2, 3] },
-            { type: "tf", stimulus: "900 VA: Rp1.352,00/kWh. 1.300 VA: Rp1.444,00/kWh. Keluarga Budi 1.300 VA menggunakan rata-rata 10 kWh/hari.", question: "Tentukan Benar atau Salah!", options: ["Tagihan listrik keluarga Budi selama 30 hari adalah Rp433.200,00.", "Selisih tagihan jika daya 900 VA adalah Rp27.600,00 per bulan.", "Semakin besar daya (VA), tarif per kWh semakin mahal."], answer: [true, true, true] },
-            { type: "mcq", stimulus: "Operasi bentuk aljabar: 3(2x² - 4) - 2(x² - 5)", question: "Hasil akhir yang paling sederhana adalah ....", options: ["4x² - 2", "4x² - 7", "8x² - 22", "8x² + 2"], answer: 0 },
-            // Perbaikan No.13: Pernyataan 2 Benar (Indeks 1)
-            { type: "checkbox", stimulus: "Paket Hemat: Rp60.000/12GB. Paket Super: Rp100.000/25GB. Anggaran Rp150.000 dan butuh setidaknya 35 GB.", question: "Manakah kombinasi pembelian yang benar dan masuk anggaran?", options: ["Membeli 3 Paket Hemat.", "Membeli 1 Paket Super dan 1 Paket Hemat.", "Membeli 2 Paket Super.", "Membeli 1 Paket Super dan 2 Paket Hemat."], answer: [1] },
-            // Perbaikan No.14: Pernyataan 1 dan 3 Benar (Benar - Salah - Benar)
-            { type: "tf", stimulus: "Andi: 2 tiket + 1 popcorn = Rp110.000. Budi: 3 tiket + 1 popcorn = Rp160.000.", question: "Tentukan Benar atau Salah pernyataan berikut!", options: ["Harga satu tiket bioskop adalah Rp50.000,00.", "Harga satu paket popcorn adalah Rp10.000,00.", "Jika membeli 1 tiket dan 1 popcorn, total harganya adalah Rp60.000,00."], answer: [true, false, true] },
-            { type: "mcq", stimulus: "Harga beli mesin cuci Rp4.000.000. Penyusutan linear Rp300.000 per tahun.", question: "Setelah berapa tahun nilai mesin cuci tersebut menjadi Rp1.900.000,00?", options: ["5 tahun", "6 tahun", "7 tahun", "8 tahun"], answer: 2 },
-            { type: "mcq", stimulus: "Pola dekorasi ubin: Pola 1=1 biru, Pola 2=4 biru, Pola 3=9 biru.", question: "Berapa jumlah ubin biru pada pola ke-7?", options: ["28", "49", "56", "64"], answer: 1 },
-            { type: "tf", stimulus: "Siswa menabung: Ming-1: Rp5.000, Ming-2: Rp8.000, Ming-3: Rp11.000.", question: "Tentukan Benar atau Salah!", options: ["Besar tabungan pada minggu ke-10 adalah Rp32.000,00.", "Total tabungan setelah 4 minggu adalah Rp38.000,00.", "Selisih tabungan minggu ke-8 dan ke-5 adalah Rp9.000,00."], answer: [true, true, true] },
-            { type: "mcq", stimulus: "Dua rel kereta api sejajar dipotong jalan aspal. <img src='TKA_SMP_3.18.png' class='stimulus-img'> Sudut antara rel pertama dan jalan adalah 75°.", question: "Berapakah besar sudut dalam sepihak yang terbentuk di rel kedua?", options: ["75°", "105°", "115°", "180°"], answer: 1 },
-            { type: "tf", stimulus: "Gedung asli 24m difoto jadi 8cm. Tiang lampu asli 6m.", question: "Tentukan Benar atau Salah!", options: ["Skala pengecilan pada foto tersebut adalah 1 : 300.", "Tinggi tiang lampu pada hasil cetak foto adalah 2 cm.", "Jika foto diperbesar dua kali, tinggi gedung di foto menjadi 12 cm."], answer: [true, true, false] },
-            // Perbaikan No.20: Pernyataan 1, 3, dan 4 Benar (Indeks 0, 2, 3)
-            { type: "checkbox", stimulus: "Teras rumah: Persegi panjang (4x3m) dan Segitiga siku-siku (alas 3m, tinggi 2m).", question: "Manakah pernyataan yang benar mengenai luas teras tersebut?", options: ["Luas bagian persegi panjang adalah 12 m².", "Luas bagian segitiga adalah 3 m².", "Luas total teras tersebut adalah 15 m².", "Teras tersebut cukup dipasangi 150 ubin berukuran 0,1 m²."], answer: [0, 2, 3] },
-            { type: "mcq", stimulus: "Lantai dapur berukuran 3m x 3m akan dipasangi keramik 30cm x 30cm.", question: "Jumlah minimal keramik yang dibutuhkan adalah ....", options: ["90 buah", "100 buah", "300 buah", "900 buah"], answer: 1 },
-            { type: "mcq", stimulus: "Kotak paket Balok: panjang 50 cm, lebar 30 cm, tinggi 20 cm.", question: "Berapa volume maksimal ruang di dalam kotak tersebut?", options: ["30.000 cm³", "30 liter", "3.000 cm³", "3 liter"], answer: 1 },
-            { type: "mcq", stimulus: "Titik koordinat K(2, -5) ditranslasikan oleh T(-3, 7).", question: "Posisi akhir benda tersebut setelah pergeseran adalah ....", options: ["(-1, 2)", "(5, 12)", "(-1, -12)", "(5, -2)"], answer: 0 },
-            { type: "mcq", stimulus: "Titik L(4, 6) direfleksikan terhadap sumbu-X, kemudian dicerminkan lagi terhadap garis y = x.", question: "Koordinat bayangan akhir dari titik L adalah ....", options: ["(4, -6)", "(-6, 4)", "(6, 4)", "(6, -4)"], answer: 1 },
-            { type: "mcq", stimulus: "Menara Air. <img src='TKA_SMP_3.25.png' class='stimulus-img'> Tabung (r=1m, t=3m) + Kerucut (r=1m, t=0.75m). Gunakan π = 3,14.", question: "Berapa volume total air maksimal yang dapat ditampung menara tersebut?", options: ["9,42 m³", "10,205 m³", "11,775 m³", "12,56 m³"], answer: 1 },
-            { type: "mcq", stimulus: "Harga Saham: Sen(1200), Sel(1500), Rab(1400), Kam(1600), Jum(1800).", question: "Kenaikan harga saham yang paling besar terjadi pada hari ....", options: ["Senin ke Selasa", "Selasa ke Rabu", "Rabu ke Kamis", "Kamis ke Jumat"], answer: 0 },
-            { type: "checkbox", stimulus: "Hobi Siswa (Total 120 orang). <img src='TKA_SMP_3.27.png' class='stimulus-img'> Olahraga 40%, Kesenian 30%, Membaca 20%, Lainnya 10%.", question: "Manakah pernyataan yang benar mengenai hobi siswa?", options: ["Jumlah siswa hobi Olahraga adalah 48 orang.", "Selisih siswa Kesenian dan Membaca adalah 12 orang.", "Siswa hobi Membaca berjumlah 20 orang.", "Gabungan Olahraga dan Lainnya adalah 50%."], answer: [0, 1, 3] },
-            { type: "mcq", stimulus: "Rata-rata 10 siswa adalah 75. Ada satu siswa seharusnya 90 ternyata tertulis 70.", question: "Berapakah nilai rata-rata yang benar setelah diperbaiki?", options: ["76", "77", "78", "80"], answer: 1 },
-            // Perbaikan No.29: Jawaban D (Indeks 3)
-            { type: "mcq", stimulus: "Isi tas: 5 Merah, 3 Kuning, 2 Hijau. Ambil satu per satu tanpa pengembalian. Pertama Merah.", question: "Berapa peluang kelereng kedua yang terambil adalah Kuning?", options: ["3/10", "3/9", "2/10", "1/3"], answer: 3 },
-            { type: "checkbox", stimulus: "Pelemparan dua dadu secara bersamaan. Mengamati jumlah mata dadu yang habis dibagi 5.", question: "Manakah pernyataan yang benar? (Pilih semua yang benar)", options: ["Pasangan berjumlah 5 adalah (1,4), (2,3), (3,2), (4,1).", "Pasangan berjumlah 10 adalah (4,6), (5,5), (6,4).", "Total titik sampel adalah 36.", "Peluang muncul jumlah habis dibagi 5 adalah 7/36."], answer: [0, 1, 2, 3] }
+            { 
+                type: "mcq", 
+                stimulus: "Sebuah supermarket memberikan kupon diskon 'Potongan Langsung Rp25.000,00' untuk minimal belanja Rp200.000,00. Namun, total belanja tersebut akan dikenakan pajak pertambahan nilai (PPN) sebesar 11% dari harga setelah diskon. Rina membeli barang dengan total harga Rp225.000,00 (sebelum diskon dan pajak).", 
+                question: "Berapa total uang yang harus dibayar Rina di kasir?", 
+                options: ["Rp200.000,00", "Rp222.000,00", "Rp224.500,00", "Rp249.750,00"], 
+                answer: 1 
+            },
+            { 
+                type: "checkbox", 
+                stimulus: "Diketahui tiga bilangan hasil perhitungan berikut:<br>\\( X = (14^2 - 4^2) \\)<br>\\( Y = (15 \\times 12) \\)<br>\\( Z = 2^2 \\times 3^2 \\times 5 \\)", 
+                question: "Manakah pernyataan yang benar mengenai hubungan ketiga bilangan tersebut? (Pilih semua yang sesuai)", 
+                options: ["Bilangan X dan Y memiliki nilai yang sama besar.", "Ketiga bilangan tersebut habis dibagi oleh 60.", "Faktor persekutuan terbesar (FPB) dari X, Y, dan Z adalah 20.", "Bilangan Z memiliki nilai yang sama dengan Y."], 
+                answer: [0, 1, 3] 
+            },
+            { 
+                type: "tf", 
+                stimulus: "Skala pada peta Provinsi Jawa Barat menunjukkan \\( 1 : 500.000 \\). Jarak antara kota A dan kota B pada peta adalah 12 cm. Pak Budi mengendarai mobil dengan kecepatan rata-rata 60 km/jam untuk menempuh jarak tersebut.", 
+                question: "Tentukan Benar atau Salah pernyataan berikut!", 
+                options: ["Jarak sebenarnya antara kota A dan kota B adalah 60 km.", "Waktu yang dibutuhkan Pak Budi untuk sampai ke tujuan adalah tepat 1 jam.", "Jika skala peta diubah menjadi \\( 1 : 250.000 \\), maka jarak di peta menjadi 24 cm."], 
+                answer: [true, true, true] 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "Untuk mendapatkan warna cat 'Ungu Lavender', seorang tukang cat mencampurkan cat Biru dan Merah dengan perbandingan \\( 4 : 3 \\). Jika tukang cat tersebut ingin menghasilkan 14 liter campuran cat Ungu Lavender.", 
+                question: "Berapa liter cat Merah yang harus ia siapkan?", 
+                options: ["6 liter", "8 liter", "10 liter", "12 liter"], 
+                answer: 0 
+            },
+            { 
+                type: "checkbox", 
+                stimulus: "Seorang koki memperkirakan bahwa untuk menjamu 50 tamu undangan, dibutuhkan 12,5 kg beras. Hari ini, ia mendapatkan pesanan mendadak untuk menjamu 180 orang.", 
+                question: "Manakah pernyataan estimasi yang benar mengenai kebutuhan beras koki tersebut? (Pilih semua yang benar)", 
+                options: ["Kebutuhan beras total adalah 45 kg.", "Rata-rata setiap tamu mengonsumsi 0,25 kg beras.", "Koki tersebut cukup membeli 4 karung beras ukuran 10 kg.", "Jika jumlah tamu berkurang menjadi 100 orang, kebutuhan beras menjadi 25 kg."], 
+                answer: [0, 1, 3] 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "Persediaan pakan di sebuah peternakan ayam cukup untuk 1.200 ekor ayam selama 20 hari. Jika peternak tersebut menambah 300 ekor ayam lagi tanpa menambah persediaan pakan.", 
+                question: "Berapa hari pakan tersebut akan habis?", 
+                options: ["15 hari", "16 hari", "18 hari", "25 hari"], 
+                answer: 1 
+            },
+            { 
+                type: "tf", 
+                stimulus: "<img src='TKA_SMP_3.7.png' class='stimulus-img' onerror=\"this.style.display='none'\"> <b>Pembangunan Gedung Olahraga</b>: Sebuah proyek direncanakan selesai dalam 60 hari oleh 24 pekerja. Setelah 15 hari berjalan, proyek terhenti selama 9 hari karena masalah cuaca. Manajer ingin proyek selesai tetap waktu (hari ke-60).", 
+                question: "Tentukan Benar atau Salah pernyataan berikut!", 
+                options: ["Sisa waktu efektif setelah libur cuaca adalah 36 hari.", "Hutang pekerjaan akibat libur adalah 216 unit kerja.", "Manajer harus menambah 6 pekerja agar proyek selesai tepat waktu."], 
+                answer: [true, true, true] 
+            },
+            { 
+                type: "checkbox", 
+                stimulus: "Sebuah aplikasi streaming musik menawarkan dua paket langganan:<br>Paket A: Biaya tetap Rp50.000,00 per bulan (tanpa iklan).<br>Paket B: Gratis, namun setiap mendengarkan 3 lagu akan muncul 1 iklan berdurasi 30 detik. Andi biasanya mendengarkan 300 lagu setiap bulannya. Ia menganggap waktunya sangat berharga dan menilai setiap 1 jam waktunya setara dengan Rp10.000,00.", 
+                question: "Manakah pernyataan yang logis mengenai pemilihan paket tersebut? (Pilih semua yang benar)", 
+                options: ["Total waktu yang dihabiskan Andi menonton iklan di Paket B adalah 50 menit.", "Nilai waktu yang hilang akibat iklan di Paket B setara dengan Rp8.333,00.", "Paket B secara finansial lebih menguntungkan karena total 'biaya' (uang + waktu) di bawah Rp50.000,00.", "Jika Andi mendengarkan 600 lagu, Paket A menjadi lebih menguntungkan daripada Paket B."], 
+                answer: [0, 1, 2] 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "<b>Alur Perjalanan Kereta Cepat:</b><br>1. Keberangkatan dari Stasiun Halim: Pukul 09.00.<br>2. Perjalanan menuju Stasiun Padalarang: 30 menit.<br>3. Berhenti di Padalarang untuk menaik-turunkan penumpang: 10 menit.<br>4. Perjalanan menuju Stasiun Tegalluar: 15 menit.", 
+                question: "Pada pukul berapakah kereta tersebut diperkirakan sampai di Stasiun Tegalluar jika tidak ada kendala teknis?", 
+                options: ["09.45", "09.55", "10.05", "10.15"], 
+                answer: 1 
+            },
+            { 
+                type: "checkbox", 
+                stimulus: "Berdasarkan alur di atas (Soal No. 9), terdapat kendala persinyalan di kilometer 50 yang memaksa kereta mengurangi kecepatan menjadi setengahnya selama 10 menit dari waktu perjalanan normal antara Halim dan Padalarang.", 
+                question: "Manakah dampak yang mungkin terjadi pada jadwal kereta? (Pilih semua yang benar)", 
+                options: ["Kereta akan terlambat sampai di Padalarang selama tepat 10 menit.", "Total waktu perjalanan dari Halim ke Tegalluar menjadi lebih dari 1 jam.", "Kereta akan sampai di Tegalluar pukul 10.05.", "Kecepatan rata-rata seluruh perjalanan akan menurun."], 
+                answer: [0, 1, 2, 3] 
+            },
+            { 
+                type: "tf", 
+                stimulus: "Sebuah perusahaan listrik memberikan tarif:<br>900 VA: Rp1.352,00 per kWh.<br>1.300 VA: Rp1.444,00 per kWh. Keluarga Budi menggunakan daya 1.300 VA dan mengonsumsi rata-rata 10 kWh per hari.", 
+                question: "Tentukan Benar atau Salah!", 
+                options: ["Tagihan listrik keluarga Budi selama 30 hari adalah Rp433.200,00.", "Selisih tagihan jika menggunakan daya 900 VA (dengan konsumsi sama) adalah Rp27.600,00 per bulan.", "Semakin besar daya (VA), tarif per kWh cenderung semakin mahal."], 
+                answer: [true, true, true] 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "Perhatikan penyederhanaan bentuk aljabar berikut: \\( 3(2x^2 - 4) - 2(x^2 - 5) \\)", 
+                question: "Hasil akhir yang paling sederhana adalah ....", 
+                options: ["\\( 4x^2 - 2 \\)", "\\( 4x^2 - 7 \\)", "\\( 8x^2 - 22 \\)", "\\( 8x^2 + 2 \\)"], 
+                answer: 0 
+            },
+            { 
+                type: "checkbox", 
+                stimulus: "Seseorang ingin membeli paket data internet. Tersedia pilihan:<br>Paket Hemat: Rp60.000,00 untuk 12 GB.<br>Paket Super: Rp100.000,00 untuk 25 GB. Ia hanya memiliki anggaran Rp150.000,00 dan membutuhkan setidaknya 35 GB untuk pengerjaan proyek.", 
+                question: "Manakah kombinasi pembelian yang benar dan masuk anggaran? (Pilih semua yang benar)", 
+                options: ["Membeli 3 Paket Hemat.", "Membeli 1 Paket Super dan 1 Paket Hemat.", "Membeli 2 Paket Super.", "Membeli 1 Paket Super dan 2 Paket Hemat."], 
+                answer: [1] 
+            },
+            { 
+                type: "tf", 
+                stimulus: "Misalkan harga satu tiket bioskop adalah \\(x\\) dan satu paket popcorn adalah \\(y\\). Andi membayar Rp110.000,00 untuk 2 tiket dan 1 popcorn. Budi membayar Rp160.000,00 untuk 3 tiket dan 1 popcorn.", 
+                question: "Tentukan Benar atau Salah pernyataan berikut!", 
+                options: ["Harga satu tiket bioskop adalah Rp50.000,00.", "Harga satu paket popcorn adalah Rp20.000,00.", "Jika membeli 1 tiket dan 1 popcorn, total harganya adalah Rp60.000,00."], 
+                answer: [true, false, true] 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "Nilai sebuah mesin cuci mengalami penyusutan secara linear. Harga beli adalah Rp4.000.000,00. Setiap tahun, nilainya berkurang Rp300.000,00.", 
+                question: "Setelah berapa tahun nilai mesin cuci tersebut menjadi Rp1.900.000,00?", 
+                options: ["5 tahun", "6 tahun", "7 tahun", "8 tahun"], 
+                answer: 2 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "Pola dekorasi ubin lantai:<br>Pola 1: 4 ubin putih, 1 ubin biru.<br>Pola 2: 8 ubin putih, 4 ubin biru.<br>Pola 3: 12 ubin putih, 9 ubin biru.", 
+                question: "Berapa jumlah ubin biru pada pola ke-7?", 
+                options: ["28", "49", "56", "64"], 
+                answer: 1 
+            },
+            { 
+                type: "tf", 
+                stimulus: "Seorang siswa menabung setiap minggu dengan kenaikan tetap (aritmetika). Minggu pertama Rp5.000,00, minggu kedua Rp8.000,00, minggu ketiga Rp11.000,00, dan seterusnya.", 
+                question: "Tentukan Benar atau Salah pernyataan berikut mengenai tabungan siswa tersebut!", 
+                options: ["Besar tabungan pada minggu ke-10 adalah Rp32.000,00.", "Total seluruh tabungan setelah 4 minggu adalah Rp38.000,00.", "Selisih tabungan minggu ke-8 dan minggu ke-5 adalah Rp9.000,00."], 
+                answer: [true, true, true] 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "<img src='TKA_SMP_3.18.png' class='stimulus-img' onerror=\"this.style.display='none'\"> <b>Jalur Kereta Api</b>: Sudut yang terbentuk antara rel pertama dan jalan aspal adalah \\( 75^{\\circ} \\).", 
+                question: "Berdasarkan sifat sudut pada garis sejajar, berapakah besar sudut dalam sepihak yang terbentuk di rel kedua?", 
+                options: ["\\( 75^{\\circ} \\)", "\\( 105^{\\circ} \\)", "\\( 115^{\\circ} \\)", "\\( 180^{\\circ} \\)"], 
+                answer: 1 
+            },
+            { 
+                type: "tf", 
+                stimulus: "Dalam dunia fotografi, perbandingan antara objek asli dan hasil cetakan foto mengikuti prinsip kesebangunan. Sebuah gedung asli setinggi 24 meter difoto. Pada hasil cetakan foto, tinggi gedung tersebut menjadi 8 cm. Di samping gedung tersebut terdapat tiang lampu yang tinggi aslinya 6 meter.", 
+                question: "Tentukan Benar atau Salah!", 
+                options: ["Skala pengecilan pada foto tersebut adalah \\( 1 : 300 \\).", "Tinggi tiang lampu pada hasil cetak foto adalah 2 cm.", "Jika foto diperbesar dua kali, tinggi gedung di foto menjadi 12 cm."], 
+                answer: [true, true, false] 
+            },
+            { 
+                type: "checkbox", 
+                stimulus: "Sebuah teras rumah berbentuk gabungan dari sebuah persegi panjang (ukuran \\( 4 \\text{ m} \\times 3 \\text{ m} \\)) dan sebuah segitiga siku-siku (alas 3 m, tinggi 2 m) yang menempel pada salah satu sisi lebarnya.", 
+                question: "Manakah pernyataan yang benar mengenai luas teras tersebut? (Pilih semua yang benar)", 
+                options: ["Luas bagian persegi panjang adalah 12 \\( m^2 \\).", "Luas bagian segitiga adalah 6 \\( m^2 \\).", "Luas total teras tersebut adalah 15 \\( m^2 \\).", "Teras tersebut cukup dipasangi 150 ubin berukuran \\( 0,1 \\text{ m}^2 \\)."], 
+                answer: [0, 2, 3] 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "Lantai sebuah dapur berukuran \\( 3 \\text{ m} \\times 3 \\text{ m} \\) akan dipasangi keramik persegi berukuran \\( 30 \\text{ cm} \\times 30 \\text{ cm} \\).", 
+                question: "Jumlah minimal keramik yang dibutuhkan adalah ....", 
+                options: ["90 buah", "100 buah", "300 buah", "900 buah"], 
+                answer: 1 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "Sebuah kotak paket pengiriman berbentuk balok memiliki panjang 50 cm, lebar 30 cm, dan tinggi 20 cm. Berat maksimal isi paket adalah 10 kg.", 
+                question: "Berapa volume maksimal ruang di dalam kotak tersebut?", 
+                options: ["30.000 \\( cm^3 \\)", "30 liter", "3.000 \\( cm^3 \\)", "3 liter"], 
+                answer: 1 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "Titik koordinat sebuah benda \\( K(2, -5) \\) ditranslasikan (digeser) oleh \\( T(-3, 7) \\).", 
+                question: "Posisi akhir benda tersebut setelah pergeseran adalah ....", 
+                options: ["\\( (-1, 2) \\)", "\\( (5, 12) \\)", "\\( (-1, -12) \\)", "\\( (5, -2) \\)"], 
+                answer: 0 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "Sebuah titik \\( L(4, 6) \\) direfleksikan (dicerminkan) terhadap sumbu-X, kemudian hasilnya dicerminkan lagi terhadap garis \\( y = x \\).", 
+                question: "Koordinat bayangan akhir dari titik \\( L \\) adalah ....", 
+                options: ["\\( (4, -6) \\)", "\\( (-6, 4) \\)", "\\( (6, 4) \\)", "\\( (6, -4) \\)"], 
+                answer: 1 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "<img src='TKA_SMP_3.25.png' class='stimulus-img' onerror=\"this.style.display='none'\"> <b>Menara Air</b>: Sebuah menara air berbentuk tabung dengan jari-jari 1 meter dan tinggi 3 meter. Bagian atapnya berbentuk kerucut dengan jari-jari yang sama dan tinggi 0,75 meter.", 
+                question: "Berapa volume total air maksimal yang dapat ditampung menara tersebut? (Gunakan \\( \\pi = 3,14 \\))", 
+                options: ["9,42 \\( m^3 \\)", "10,205 \\( m^3 \\)", "11,775 \\( m^3 \\)", "12,56 \\( m^3 \\)"], 
+                answer: 1 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "<b>Grafik Harga Saham Perusahaan X</b>: Diagram garis menunjukkan harga saham dalam seminggu: Senin: 1.200, Selasa: 1.500, Rabu: 1.400, Kamis: 1.600, Jumat: 1.800.", 
+                question: "Kenaikan harga saham yang paling besar terjadi pada hari ....", 
+                options: ["Senin ke Selasa", "Selasa ke Rabu", "Rabu ke Kamis", "Kamis ke Jumat"], 
+                answer: 0 
+            },
+            { 
+                type: "checkbox", 
+                stimulus: "<img src='TKA_SMP_3.27.png' class='stimulus-img' onerror=\"this.style.display='none'\"> <b>Hobi Siswa Kelas IX</b> (Total 120 orang): Olahraga: 40%, Kesenian: 30%, Membaca: 20%, Lainnya: 10%.", 
+                question: "Manakah pernyataan yang benar mengenai hobi siswa? (Pilih semua yang benar)", 
+                options: ["Jumlah siswa yang hobi Olahraga adalah 48 orang.", "Selisih siswa yang hobi Kesenian dan Membaca adalah 12 orang.", "Siswa yang hobi Membaca berjumlah 20 orang.", "Gabungan siswa hobi Olahraga dan Lainnya adalah 50% dari total siswa."], 
+                answer: [0, 1, 3] 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "Nilai rata-rata 10 siswa dalam ujian adalah 75. Setelah dilakukan peninjauan, terdapat kesalahan input nilai satu siswa yang seharusnya 90 ternyata tertulis 70.", 
+                question: "Berapakah nilai rata-rata yang benar setelah diperbaiki?", 
+                options: ["76", "77", "78", "80"], 
+                answer: 1 
+            },
+            { 
+                type: "mcq", 
+                stimulus: "Sebuah tas berisi 5 kelereng merah, 3 kelereng kuning, dan 2 kelereng hijau. Seseorang mengambil dua kelereng satu per satu tanpa pengembalian. Kelereng pertama yang terambil adalah Merah.", 
+                question: "Berapa peluang kelereng kedua yang terambil adalah Kuning?", 
+                options: ["\\( 3/10 \\)", "\\( 3/9 \\)", "\\( 2/10 \\)", "\\( 1/3 \\)"], 
+                answer: 3 
+            },
+            { 
+                type: "checkbox", 
+                stimulus: "Dalam pelemparan dua dadu secara bersamaan. Kita ingin mengamati munculnya jumlah mata dadu yang habis dibagi 5.", 
+                question: "Manakah pernyataan yang benar? (Pilih semua yang benar)", 
+                options: ["Pasangan mata dadu yang berjumlah 5 adalah (1,4), (2,3), (3,2), (4,1).", "Pasangan mata dadu yang berjumlah 10 adalah (4,6), (5,5), (6,4).", "Total kejadian yang mungkin (titik sampel) adalah 36.", "Peluang muncul jumlah mata dadu habis dibagi 5 adalah \\( 7/36 \\)."], 
+                answer: [0, 1, 2, 3] 
+            }
         ];
 
         let currentIdx = 0;
         let userAnswers = new Array(questions.length).fill(null);
+        let student = { name: "", school: "" };
         let timeLeft = 75 * 60;
         let timerInterval;
 
         function startTest() {
+            student.name = document.getElementById('input-name').value.trim();
+            student.school = document.getElementById('input-school').value.trim();
+            if (!student.name || !student.school) { alert("Harap isi Nama & Asal Sekolah!"); return; }
             document.getElementById('intro-screen').classList.add('hidden');
             document.getElementById('main-test-area').classList.remove('hidden');
+            document.getElementById('user-display').innerText = `Murid: ${student.name} | Sekolah: ${student.school}`;
             initNav();
             loadQuestion();
-            startTimer();
+            timerInterval = setInterval(updateTimer, 1000);
         }
 
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                let mins = Math.floor(timeLeft / 60);
-                let secs = timeLeft % 60;
-                const timerEl = document.getElementById('timer');
-                if (timerEl) timerEl.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                if (timeLeft <= 0) { clearInterval(timerInterval); finishQuiz(); }
-            }, 1000);
+        function updateTimer() {
+            timeLeft--;
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            document.getElementById('timer').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            if (timeLeft <= 0) finishQuiz();
         }
 
         function initNav() {
             const grid = document.getElementById('nav-grid');
             grid.innerHTML = '';
             questions.forEach((_, i) => {
-                const btn = document.createElement('div');
-                btn.id = `nav-${i}`;
-                btn.className = 'nav-btn nav-unanswered border-slate-200';
-                btn.innerText = i + 1;
-                btn.onclick = () => { currentIdx = i; loadQuestion(); };
-                grid.appendChild(btn);
+                const b = document.createElement('div');
+                b.id = `nav-${i}`;
+                b.className = 'nav-btn nav-unanswered';
+                b.innerText = i + 1;
+                b.onclick = () => { currentIdx = i; loadQuestion(); };
+                grid.appendChild(b);
             });
         }
 
         function loadQuestion() {
             const q = questions[currentIdx];
-            document.getElementById('question-number').innerText = currentIdx + 1;
-            document.getElementById('stimulus-content').innerHTML = q.stimulus;
-            document.getElementById('question-text').innerText = q.question;
+            document.getElementById('q-num').innerText = currentIdx + 1;
+            document.getElementById('stimulus-text').innerHTML = q.stimulus;
+            document.getElementById('question-text').innerHTML = q.question;
             
             document.querySelectorAll('.nav-btn').forEach((btn, idx) => {
                 btn.classList.remove('nav-current');
                 if (idx === currentIdx) btn.classList.add('nav-current');
                 const ans = userAnswers[idx];
-                let isAnswered = false;
-                if (ans !== null) {
-                    if (Array.isArray(ans)) isAnswered = ans.length > 0 && !ans.includes(null);
-                    else isAnswered = true;
-                }
-                if (isAnswered) btn.classList.replace('nav-unanswered', 'nav-answered');
-                else btn.classList.replace('nav-answered', 'nav-unanswered');
+                let done = ans !== null && (!Array.isArray(ans) || (ans.length > 0 && !ans.includes(null)));
+                btn.className = `nav-btn ${done ? 'nav-answered' : 'nav-unanswered'} ${idx === currentIdx ? 'nav-current' : ''}`;
             });
 
-            const container = document.getElementById('options-container');
-            container.innerHTML = '';
+            const cont = document.getElementById('options-container');
+            cont.innerHTML = '';
 
             if (q.type === 'mcq') {
                 q.options.forEach((opt, i) => {
-                    const div = document.createElement('div');
-                    div.className = `option-card p-4 rounded-xl flex items-center gap-3 ${userAnswers[currentIdx] === i ? 'selected shadow-sm' : ''}`;
-                    div.innerHTML = `<span class="w-8 h-8 rounded-full border-2 border-slate-200 flex items-center justify-center font-bold text-xs shrink-0">${String.fromCharCode(65 + i)}</span> <span>${opt}</span>`;
-                    div.onclick = () => { userAnswers[currentIdx] = i; loadQuestion(); };
-                    container.appendChild(div);
+                    const d = document.createElement('div');
+                    d.className = `option-card p-4 rounded-xl flex items-center gap-3 ${userAnswers[currentIdx] === i ? 'selected shadow-sm' : ''}`;
+                    d.innerHTML = `<span class="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold text-xs shrink-0">${String.fromCharCode(65 + i)}</span> <span>${opt}</span>`;
+                    d.onclick = () => { userAnswers[currentIdx] = i; loadQuestion(); };
+                    cont.appendChild(d);
                 });
             } else if (q.type === 'checkbox') {
                 if (!userAnswers[currentIdx]) userAnswers[currentIdx] = [];
                 q.options.forEach((opt, i) => {
-                    const isSelected = userAnswers[currentIdx].includes(i);
-                    const div = document.createElement('div');
-                    div.className = `option-card p-4 rounded-xl flex items-center gap-3 ${isSelected ? 'selected shadow-sm' : ''}`;
-                    div.innerHTML = `<div class="w-6 h-6 border-2 border-slate-200 rounded flex items-center justify-center shrink-0 text-blue-600 font-bold">${isSelected ? '✓' : ''}</div> <span>${opt}</span>`;
-                    div.onclick = () => {
-                        const idx = userAnswers[currentIdx].indexOf(i);
-                        if (idx > -1) userAnswers[currentIdx].splice(idx, 1);
+                    const sel = userAnswers[currentIdx].includes(i);
+                    const d = document.createElement('div');
+                    d.className = `option-card p-4 rounded-xl flex items-center gap-3 ${sel ? 'selected shadow-sm' : ''}`;
+                    d.innerHTML = `<div class="w-6 h-6 border-2 rounded flex items-center justify-center text-blue-600 font-bold">${sel ? '✓' : ''}</div> <span>${opt}</span>`;
+                    d.onclick = () => {
+                        const pos = userAnswers[currentIdx].indexOf(i);
+                        if (pos > -1) userAnswers[currentIdx].splice(pos, 1);
                         else userAnswers[currentIdx].push(i);
                         loadQuestion();
                     };
-                    container.appendChild(div);
+                    cont.appendChild(d);
                 });
             } else if (q.type === 'tf') {
                 if (!userAnswers[currentIdx]) userAnswers[currentIdx] = new Array(q.options.length).fill(null);
-                const table = document.createElement('div');
-                table.className = "space-y-4";
                 q.options.forEach((opt, i) => {
                     const row = document.createElement('div');
-                    row.className = "flex flex-col md:flex-row justify-between p-3 bg-slate-50 rounded-lg border border-slate-200 gap-3";
-                    row.innerHTML = `<p class="text-sm font-medium flex-1">${opt}</p>
+                    row.className = "flex flex-col md:flex-row justify-between p-3 bg-slate-50 rounded-lg border gap-3 mb-2";
+                    row.innerHTML = `<p class="text-sm font-bold flex-1">${opt}</p>
                         <div class="flex gap-2">
-                            <button onclick="setTF(${i}, true)" class="px-4 py-1.5 rounded-lg font-bold text-xs ${userAnswers[currentIdx][i] === true ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white border border-slate-200 text-slate-400'}">BENAR</button>
-                            <button onclick="setTF(${i}, false)" class="px-4 py-1.5 rounded-lg font-bold text-xs ${userAnswers[currentIdx][i] === false ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'bg-white border border-slate-200 text-slate-400'}">SALAH</button>
+                            <button onclick="setTF(${i}, true)" class="px-5 py-2 rounded-xl text-xs font-black ${userAnswers[currentIdx][i] === true ? 'bg-emerald-600 text-white shadow-lg' : 'bg-white border text-slate-400'}">BENAR</button>
+                            <button onclick="setTF(${i}, false)" class="px-5 py-2 rounded-xl text-xs font-black ${userAnswers[currentIdx][i] === false ? 'bg-rose-600 text-white shadow-lg' : 'bg-white border text-slate-400'}">SALAH</button>
                         </div>`;
-                    table.appendChild(row);
+                    cont.appendChild(row);
                 });
-                container.appendChild(table);
             }
             document.getElementById('prev-btn').disabled = currentIdx === 0;
-            document.getElementById('next-btn').disabled = currentIdx === questions.length - 1;
+            document.getElementById('next-btn').innerText = currentIdx === questions.length - 1 ? "FINISH" : "SELANJUTNYA";
+            if (window.MathJax) { MathJax.typesetPromise(); }
         }
 
-        window.setTF = (idx, val) => { userAnswers[currentIdx][idx] = val; loadQuestion(); };
-        function changeQuestion(step) { currentIdx += step; loadQuestion(); }
-        function closeModal() { document.getElementById('modal-warning').classList.add('hidden'); }
-
-        function checkBeforeSubmit() {
-            let incomplete = [];
-            questions.forEach((q, idx) => {
-                const ans = userAnswers[idx];
-                let isComplete = false;
-                if (q.type === 'mcq') isComplete = ans !== null;
-                else if (q.type === 'checkbox') isComplete = ans && ans.length > 0;
-                else if (q.type === 'tf') isComplete = ans && !ans.includes(null);
-                if (!isComplete) incomplete.push(idx + 1);
-            });
-            if (incomplete.length > 0) {
-                document.getElementById('warning-text').innerText = `Masih ada ${incomplete.length} soal yang belum dijawab (Nomor: ${incomplete.join(', ')}).`;
-                document.getElementById('modal-warning').classList.remove('hidden');
-            } else { finishQuiz(); }
+        window.setTF = (i, v) => { userAnswers[currentIdx][i] = v; loadQuestion(); };
+        function changeQuestion(s) { 
+            if (s === 1 && currentIdx === questions.length - 1) { confirmFinish(); return; }
+            currentIdx += s; loadQuestion(); 
         }
+
+        function confirmFinish() { document.getElementById('confirm-modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('confirm-modal').classList.add('hidden'); }
 
         function finishQuiz() {
             clearInterval(timerInterval);
-            let correctCount = 0;
-            let results = [];
+            let ok = 0;
+            let correctMap = [];
             questions.forEach((q, i) => {
                 const ua = userAnswers[i];
-                let isCorrect = false;
-                if (q.type === 'mcq' && ua === q.answer) isCorrect = true;
-                else if (q.type === 'checkbox' && Array.isArray(ua) && ua.sort().join(',') === q.answer.sort().join(',')) isCorrect = true;
-                else if (q.type === 'tf' && JSON.stringify(ua) === JSON.stringify(q.answer)) isCorrect = true;
-                if (isCorrect) correctCount++;
-                results.push(isCorrect);
+                let isOk = false;
+                if (q.type === 'mcq' && ua === q.answer) isOk = true;
+                else if (q.type === 'checkbox' && Array.isArray(ua) && ua.sort().join(',') === q.answer.sort().join(',')) isOk = true;
+                else if (q.type === 'tf' && JSON.stringify(ua) === JSON.stringify(q.answer)) isOk = true;
+                
+                if (isOk) ok++;
+                correctMap.push(isOk);
             });
 
-            const finalScore = Math.round((correctCount / questions.length) * 100);
+            const score = Math.round((ok / questions.length) * 100);
             document.getElementById('main-test-area').classList.add('hidden');
+            document.getElementById('confirm-modal').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
-            document.getElementById('final-score').innerText = finalScore;
-            document.getElementById('correct-count').innerText = correctCount;
-            document.getElementById('score-message').innerText = finalScore >= 75 ? "Hebat! Kamu sudah sangat siap menghadapi ujian." : "Terus berlatih ya, kamu pasti bisa mendapatkan skor lebih tinggi!";
-            const breakdown = document.getElementById('result-breakdown');
-            breakdown.innerHTML = '';
-            results.forEach((c, idx) => {
-                const box = document.createElement('div');
-                box.className = `res-box ${c ? 'res-correct' : 'res-wrong'}`;
-                box.innerText = idx + 1;
-                breakdown.appendChild(box);
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('correct-count').innerText = ok;
+
+            const ev = document.getElementById('eval-grid');
+            ev.innerHTML = '';
+            correctMap.forEach((c, i) => {
+                const b = document.createElement('div');
+                b.className = `res-box ${c ? 'res-correct' : 'res-wrong'}`;
+                b.innerText = i + 1;
+                ev.appendChild(b);
             });
         }
     </script>
